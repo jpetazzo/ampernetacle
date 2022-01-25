@@ -44,6 +44,20 @@ don't work on Windows. (See #2.) I'm going to try and find a better
 way to get the kubeconfig file; but meanwhile, you could try to run
 it in WSL2. (Sorry!)
 
+## Availability Domain
+
+If you get a message like the following:
+
+```
+Error: 500-InternalError
+│ ...
+│ Service: Core Instance
+│ Error Message: Out of host capacity.
+```
+
+...then you can try to switch to a different *availability domain*.
+This can be done by changing the `availability_domain` input variable. (Thanks @uknbr for the contribution!)
+
 ## Customization
 
 Check `variables.tf` to see tweakable parameters. You can change the number
