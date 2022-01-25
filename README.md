@@ -1,4 +1,4 @@
-# (no name yet)
+# Ampernetacle
 
 This is a Terraform configuration to deploy a Kubernetes cluster on
 [Oracle Cloud Infrastructure][oci]. It creates a few virtual machines
@@ -18,7 +18,8 @@ if you want to develop or test applications on ARM.
 
 1. Create an Oracle Cloud Infrastructure account.
 2. Configure OCI credentials. (FIXME)
-3. `terraform apply`
+3. `terraform init`
+4. `terraform apply`
 
 That's it!
 
@@ -35,6 +36,13 @@ The command above should show you 4 nodes, named `node1` to `node4`.
 You can also log into the VMs. At the end of the Terraform output
 you should see a command that you can use to SSH into the first VM
 (just copy-paste the command).
+
+## Windows
+
+The `kubeconfig.tf` file currently uses UNIX-specific commands which
+don't work on Windows. (See #2.) I'm going to try and find a better
+way to get the kubeconfig file; but meanwhile, you could try to run
+it in WSL2. (Sorry!)
 
 ## Customization
 
@@ -79,6 +87,12 @@ Oracle Cloud also has a managed Kubernetes service called
 [Container Engine for Kubernetes (or OKE)][oke]. That service
 doesn't have the caveats mentioned above; however, it's not part
 of the free tier.
+
+## What does "Ampernetacle" mean?
+
+It's a *porte-manteau* between Ampere, Kubernetes, and Oracle.
+It's probably not the best name in the world but it's the one
+we have! If you have an idea for a better name let us know. 😊
 
 [freetier]: https://www.oracle.com/cloud/free/
 [kubeadm]: https://kubernetes.io/docs/reference/setup-tools/kubeadm/
