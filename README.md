@@ -17,9 +17,11 @@ if you want to develop or test applications on ARM.
 ## Getting started
 
 1. Create an Oracle Cloud Infrastructure account (just follow [this link][createaccount]).
-2. Configure OCI credentials. (FIXME)
-3. `terraform init`
-4. `terraform apply`
+2. Have installed or [install terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/oci-get-started)
+3. Have installed or [install OCI CLI ](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
+4. Configure [OCI credentials](https://learn.hashicorp.com/tutorials/terraform/oci-build?in=terraform/oci-get-started)
+5. `terraform init`
+6. `terraform apply`
 
 That's it!
 
