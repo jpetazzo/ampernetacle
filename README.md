@@ -16,7 +16,7 @@ if you want to develop or test applications on ARM.
 
 ## Getting started
 
-1. Create an Oracle Cloud Infrastructure account.
+1. Create an Oracle Cloud Infrastructure account (just follow [this link][createaccount]).
 2. Configure OCI credentials. (FIXME)
 3. `terraform init`
 4. `terraform apply`
@@ -108,6 +108,7 @@ It's a *porte-manteau* between Ampere, Kubernetes, and Oracle.
 It's probably not the best name in the world but it's the one
 we have! If you have an idea for a better name let us know. 😊
 
+[createaccount]: https://bit.ly/free-oci-dat-k8s-on-arm
 [freetier]: https://www.oracle.com/cloud/free/
 [kubeadm]: https://kubernetes.io/docs/reference/setup-tools/kubeadm/
 [oci]: https://www.oracle.com/cloud/compute/
