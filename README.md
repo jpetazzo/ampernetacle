@@ -98,6 +98,19 @@ Likewise, there is no ingress controller and no storage class.
 
 (These might be added in a later iteration of this project.)
 
+## Workaround for External-ip & Storage class
+
+External IP -> [MetalLB][metallb].
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
+
+Just make sure to use 10.0.0.11/32 in address pool.
+
+Storage Class -> [LongHorn][longhorn].
+
+kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.2.3/deploy/longhorn.yaml
+
 ## Remarks
 
 Oracle Cloud also has a managed Kubernetes service called
@@ -116,3 +129,5 @@ we have! If you have an idea for a better name let us know. 😊
 [kubeadm]: https://kubernetes.io/docs/reference/setup-tools/kubeadm/
 [oci]: https://www.oracle.com/cloud/compute/
 [oke]: https://www.oracle.com/cloud-native/container-engine-kubernetes/
+[metallb]: https://metallb.universe.tf/installation/
+[longhorn]: https://longhorn.io/docs/1.2.3/deploy/install/install-with-kubectl/
