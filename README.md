@@ -21,7 +21,7 @@ if you want to develop or test applications on ARM.
 3. Have installed or [install terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/oci-get-started).
 4. Have installed or [install OCI CLI ](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
 5. Configure [OCI credentials](https://learn.hashicorp.com/tutorials/terraform/oci-build?in=terraform/oci-get-started).
-6. Download this project and enter it's folder.
+6. Download this project and enter its folder.
 7. `terraform init`
 8. `terraform apply`
 
