@@ -43,10 +43,11 @@ you should see a command that you can use to SSH into the first VM
 
 ## Windows
 
-The `kubeconfig.tf` file currently uses UNIX-specific commands which
-don't work on Windows. (See #2.) I'm going to try and find a better
-way to get the kubeconfig file; but meanwhile, you could try to run
-it in WSL2. (Sorry!)
+It works with Windows 10/Powershell 5.1. 
+
+It may be necesssary to change the execution policy to unrestricted.
+
+[PowerShell ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-5.1)
 
 ## Availability Domain
 
