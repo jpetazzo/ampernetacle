@@ -3,7 +3,7 @@ locals {
 }
  locals {
    bash = "while ! curl -k https://${oci_core_instance._[1].public_ip}:6443; do sleep 1; done"
-   powershell = "powershell -file .\\winInsecureCurl.ps1"
+   powershell = "powershell .\\winInsecureCurl.ps1 ${oci_core_instance._[1].public_ip}"
  }
 
 resource "null_resource" "wait_for_kube_apiserver" {
@@ -18,8 +18,7 @@ data "external" "kubeconfig" {
   program = local.is_windows ? [
     "powershell",
     <<EOT
-    $Content1 = ssh -o StrictHostKeyChecking=no -l k8s -i ${local_file.ssh_private_key.filename} ${oci_core_instance._[1].public_ip} sudo base64 -w0 /etc/kubernetes/admin.conf
-    write-host "{`"base64`": `"$($Content1)`"}"
+    write-host "{`"base64`": `"$(ssh -o StrictHostKeyChecking=no -l k8s -i ${local_file.ssh_private_key.filename} ${oci_core_instance._[1].public_ip} sudo base64 -w0 /etc/kubernetes/admin.conf)`"}"
     EOT
     ] : [
     "sh",

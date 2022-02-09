@@ -1,3 +1,9 @@
+param(
+    [Parameter()]
+    [String]$address
+)
+$url  =  "https://$($address):6443"
+
 add-type @"
     using System.Net; 
     using System.Security.Cryptography.X509Certificates; 
@@ -10,4 +16,6 @@ add-type @"
     } 
 "@ 
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy 
-while ( -not (Invoke-WebRequest -uri https://${oci_core_instance._[1].public_ip}:6443)){ Start-Sleep 1 }
+Start-Sleep -Seconds 5
+while ( -not (Invoke-WebRequest $url)){ Start-Sleep -Seconds 1 }
+Start-Sleep -Seconds 5
