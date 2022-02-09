@@ -30,10 +30,19 @@ That's it!
 At the end of the `terraform apply`, a `kubeconfig` file is generated
 in this directory. To use your new cluster, you can do:
 
+Linux
 ```bash
 export KUBECONFIG=$PWD/kubeconfig
 kubectl get nodes
 ```
+
+
+Windows
+```powershell
+$env:KUBECONFIG="$pwd\kubeconfig"
+kubectl get nodes
+```
+
 
 The command above should show you 4 nodes, named `node1` to `node4`.
 
