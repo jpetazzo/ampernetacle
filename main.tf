@@ -8,6 +8,27 @@ locals {
   compartment_id = oci_identity_compartment._.id
 }
 
+# Dynamic groups must be created with a tenancy comportament id
+resource "oci_identity_dynamic_group" "_" {
+  compartment_id = oci_identity_compartment._.compartment_id
+  name = var.dynamic_group_name
+  description = var.dynamic_group_name
+  matching_rule = "All {instance.compartment.id='${local.compartment_id}'}"
+}
+
+resource "oci_identity_policy" "_" {
+  depends_on = [oci_identity_dynamic_group._]
+  compartment_id = local.compartment_id
+  name = var.policy_name
+  description = var.policy_name
+  statements = [
+    "Allow dynamic-group ${var.dynamic_group_name} to read instance-family in compartment ${var.name}",
+    "Allow dynamic-group ${var.dynamic_group_name} to use virtual-network-family in compartment ${var.name}",
+    "Allow dynamic-group ${var.dynamic_group_name} to manage load-balancers in compartment ${var.name}",
+    "Allow dynamic-group ${var.dynamic_group_name} to manage security-lists in compartment ${var.name}"
+  ]
+}
+
 data "oci_identity_availability_domains" "_" {
   compartment_id = local.compartment_id
 }
@@ -22,6 +43,7 @@ data "oci_core_images" "_" {
 }
 
 resource "oci_core_instance" "_" {
+  depends_on = [oci_identity_policy._]
   for_each            = local.nodes
   display_name        = each.value.node_name
   availability_domain = data.oci_identity_availability_domains._.availability_domains[var.availability_domain].name
