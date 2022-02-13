@@ -50,6 +50,14 @@ on:
     - main
   pull_request:
 
+env:
+  TF_VAR_tenancy_ocid: ${{ secrets.TF_VAR_TENANCY_OCID }}
+  TF_VAR_compartment_id: ${{ secrets.TF_VAR_COMPARTMENT_ID }}
+  TF_VAR_user_ocid: ${{ secrets.TF_VAR_USER_OCID }}
+  TF_VAR_fingerprint: ${{ secrets.TF_VAR_FINGERPRINT }}
+  TF_VAR_private_key_path: ${{ secrets.TF_VAR_PRIVATE_KEY_PATH }}
+  TF_VAR_region: ${{ secrets.TF_VAR_REGION }}
+
 jobs:
   terraform:
     name: 'Terraform'
@@ -75,7 +83,7 @@ jobs:
         # the secret to save
         secret:  ${{ secrets.PRIVATE_KEY }}
         # the secret to save
-        filename: pk.pem
+        filename: ${{ secrets.TF_VAR_PRIVATE_KEY_PATH }}
     
     - name: View pk
       run: ls -la
