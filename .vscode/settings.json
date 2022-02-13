@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.formatAll.terraform": true
+    }
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.formatAll.terraform": true
+    }
+  }
+}
