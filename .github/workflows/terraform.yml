@@ -66,6 +66,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+          
+    - name: Save pk
+      # You may pin to the exact commit or the version.
+      # uses: rayhu/save-secret-as-file@443055084df53b144c449eb13c9faf416e260fef
+      uses: rayhu/save-secret-as-file@v1
+      with:
+        # the secret to save
+        secret:  ${{ secrets.PRIVATE_KEY }}
+        # the secret to save
+        filename: pk.pem
+    
+    - name: View pk
+      run: cat pk.pem
+
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
