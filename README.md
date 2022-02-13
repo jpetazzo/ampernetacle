@@ -112,6 +112,7 @@ Likewise, there is no ingress controller and no storage class.
 Edit:
 
 You can use persistent storage with longhorn, here is an example database:
+
 ```
 ---
 apiVersion: v1
@@ -172,6 +173,8 @@ spec:
           claimName: mysql-pv-claim
 
 ```
+
+Longhorn will maintain replica volumes in HA on 3 worker nodes and has a UI interface to view volume status.
 
 Edit2:
 Added Ingress Controller NGINX on master node public ip.
