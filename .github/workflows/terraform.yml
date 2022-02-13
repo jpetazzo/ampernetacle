@@ -73,26 +73,22 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
-
           
     - name: Save pk
       # You may pin to the exact commit or the version.
-      # uses: rayhu/save-secret-as-file@443055084df53b144c449eb13c9faf416e260fef
-      uses: rayhu/save-secret-as-file@v1
+      uses: rayhu/save-secret-as-file@443055084df53b144c449eb13c9faf416e260fef
+      #uses: rayhu/save-secret-as-file@v1
       with:
         # the secret to save
         secret:  ${{ secrets.PRIVATE_KEY }}
         # the secret to save
         filename: ${{ secrets.TF_VAR_PRIVATE_KEY_PATH }}
-    
-    - name: View pk
-      run: ls -la
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v1    
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        terraform_version: 1.1.5
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
