@@ -176,6 +176,11 @@ data "cloudinit_config" "_" {
         kubever=$(kubectl version | base64 | tr -d '\n')
         kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$kubever
 
+        # Preparation for metallb: https://metallb.universe.tf/installation/
+        kubectl get configmap kube-proxy -n kube-system -o yaml | \
+        sed -e "s/strictARP: false/strictARP: true/" | \
+        kubectl apply -f - -n kube-system
+
         # apply cert-manager, ingress-nginx, metal lb and longhorn to the cluster:
         kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
         kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
