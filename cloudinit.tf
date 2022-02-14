@@ -5,6 +5,7 @@ locals {
     "ca-certificates",
     "curl",
     "docker.io",
+    "htop",
     "jq",
     "kubeadm",
     "kubelet",
@@ -37,6 +38,10 @@ data "cloudinit_config" "_" {
             source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
             key: |
               ${indent(8, data.http.apt_repo_key.body)}
+          tailscale.list:
+            source: "https://pkgs.tailscale.com/stable/ubuntu/focal.list"
+            key: |
+              ${indent(8, data.http.tailscale_apt_repo_key.body)}
       users:
       - default
       - name: k8s
@@ -132,6 +137,10 @@ data "cloudinit_config" "_" {
 
 data "http" "apt_repo_key" {
   url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg.asc"
+}
+
+data "http" "tailscale_apt_repo_key" {
+  url = "https://pkgs.tailscale.com/stable/ubuntu/focal.gpg"
 }
 
 # The kubeadm token must follow a specific format:

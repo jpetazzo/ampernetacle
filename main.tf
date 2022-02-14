@@ -17,8 +17,6 @@ data "oci_core_images" "_" {
   shape                    = var.shape
   operating_system         = "Canonical Ubuntu"
   operating_system_version = "20.04"
-  #operating_system         = "Oracle Linux"
-  #operating_system_version = "7.9"
 }
 
 resource "oci_core_instance" "_" {
