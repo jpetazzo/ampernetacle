@@ -14,6 +14,7 @@ locals {
     "prometheus-node-exporter",
     "python3-pip",
     "software-properties-common",
+    "tailscale",
     "tmux",
     "tree",
     "unzip",
@@ -39,7 +40,7 @@ data "cloudinit_config" "_" {
             key: |
               ${indent(8, data.http.apt_repo_key.body)}
           tailscale.list:
-            source: "https://pkgs.tailscale.com/stable/ubuntu/focal.list"
+            source: "deb https://pkgs.tailscale.com/stable/ubuntu focal main"
             key: |
               ${indent(8, data.http.tailscale_apt_repo_key.body)}
       users:
@@ -99,6 +100,15 @@ data "cloudinit_config" "_" {
       #!/bin/sh
       sed -i "s/-A INPUT -j REJECT --reject-with icmp-host-prohibited//" /etc/iptables/rules.v4 
       netfilter-persistent start
+    EOF
+  }
+
+  part {
+    filename     = "tailscale-connect.sh"
+    content_type = "text/x-shellscript"
+    content      = <<-EOF
+      #!/bin/sh
+      sudo tailscale up --authkey ${var.tailscale_authkey} --accept-routes
     EOF
   }
 
