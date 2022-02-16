@@ -121,7 +121,7 @@ This Terraform configuration:
 
 With [Cloud Controller Manager](https://github.com/oracle/oci-cloud-controller-manager#compatibility-matrix) max supported Kubernetes version is 1.20.x.
 
-To keep on free tier boudinaries only 1 load balancer can be create with shape of 10Mbps (adding annotation `service.beta.kubernetes.io/oci-load-balancer-shape: 10Mbps` on your service metadata)
+To keep on free tier boudinaries, only 1 flexible load balancer can be create with shape of 10Mbps(min and max) adding annotations on your service metadata (See [nginx-demo.yaml](nginx-demo.yaml#L74,L76) for examples).
 
 There is no ingress controller and no storage class.
 
