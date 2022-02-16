@@ -128,8 +128,8 @@ data "cloudinit_config" "_" {
         kubever=$(kubectl version | base64 | tr -d '\n')
         kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$kubever
         kubectl create secret generic oci-cloud-controller-manager -n kube-system --from-file=cloud-provider.yaml=/home/k8s/cloud-provider.yaml
-        kubectl apply -f https://raw.githubusercontent.com/oracle/oci-cloud-controller-manager/master/manifests/cloud-controller-manager/oci-cloud-controller-manager.yaml
-        kubectl apply -f https://raw.githubusercontent.com/oracle/oci-cloud-controller-manager/master/manifests/cloud-controller-manager/oci-cloud-controller-manager-rbac.yaml
+        kubectl apply -f https://github.com/oracle/oci-cloud-controller-manager/releases/download/0.12.0/oci-cloud-controller-manager-rbac.yaml
+        kubectl apply -f https://github.com/oracle/oci-cloud-controller-manager/releases/download/0.12.0/oci-cloud-controller-manager.yaml
         mkdir -p /home/k8s/.kube
         cp $KUBECONFIG /home/k8s/.kube/config
         chown -R k8s:k8s /home/k8s/.kube
