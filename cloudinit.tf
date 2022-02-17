@@ -124,7 +124,15 @@ data "cloudinit_config" "_" {
       content_type = "text/x-shellscript"
       content      = <<-EOF
       #!/bin/sh
-      kubeadm join --discovery-token-unsafe-skip-ca-verification --token ${local.kubeadm_token} ${local.nodes[1].ip_address}:6443
+      KUBE_API_SERVER=${local.nodes[1].ip_address}:6443
+      while ! curl --insecure https://$KUBE_API_SERVER; do
+        echo "Kubernetes API server ($KUBE_API_SERVER) not responding."
+        echo "Waiting 10 seconds before we try again."
+        sleep 10
+      done
+      echo "Kubernetes API server ($KUBE_API_SERVER) appears to be up."
+      echo "Trying to join this node to the cluster."
+      kubeadm join --discovery-token-unsafe-skip-ca-verification --token ${local.kubeadm_token} $KUBE_API_SERVER
     EOF
     }
   }
