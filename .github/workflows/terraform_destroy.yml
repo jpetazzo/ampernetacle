@@ -44,11 +44,7 @@
 
 name: 'Terraform'
 
-on:
-  push:
-    branches:
-    - main
-  pull_request:
+on: workflow_dispatch
 
 env:
   TF_VAR_tenancy_ocid: ${{ secrets.TF_VAR_TENANCY_OCID }}
@@ -57,7 +53,7 @@ env:
   TF_VAR_fingerprint: ${{ secrets.TF_VAR_FINGERPRINT }}
   TF_VAR_private_key_path: ${{ secrets.TF_VAR_PRIVATE_KEY_PATH }}
   TF_VAR_region: ${{ secrets.TF_VAR_REGION }}
-
+  
 jobs:
   terraform:
     name: 'Terraform'
@@ -73,7 +69,7 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
-          
+      
     - name: Save pk
       # You may pin to the exact commit or the version.
       uses: rayhu/save-secret-as-file@443055084df53b144c449eb13c9faf416e260fef
@@ -86,7 +82,7 @@ jobs:
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1    
+      uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.1.5
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
@@ -101,10 +97,10 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -destroy
 
       # On push to main, build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve
+      if: github.ref == 'refs/heads/main'
+      run: terraform destroy -auto-approve
