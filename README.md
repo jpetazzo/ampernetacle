@@ -36,7 +36,6 @@ export KUBECONFIG=$PWD/kubeconfig
 kubectl get nodes
 ```
 
-
 Windows
 ```powershell
 $env:KUBECONFIG="$pwd\kubeconfig"
@@ -71,25 +70,11 @@ kubectl delete -f ./nginx-demo.yaml
 
 ## Windows
 
-It works with Windows 10/Powershell 5.1. 
+It works with Windows 10/Powershell 5.1.
 
 It may be necesssary to change the execution policy to unrestricted.
 
 [PowerShell ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-5.1)
-
-## Availability Domain
-
-If you get a message like the following:
-
-```
-Error: 500-InternalError
-│ ...
-│ Service: Core Instance
-│ Error Message: Out of host capacity.
-```
-
-...then you can try to switch to a different *availability domain*.
-This can be done by changing the `availability_domain` input variable. (Thanks @uknbr for the contribution!)
 
 ## Customization
 
@@ -125,8 +110,6 @@ To keep on free tier boudinaries, only 1 flexible load balancer can be create wi
 
 There is no ingress controller and no storage class.
 
-(These might be added in a later iteration of this project.)
-
 ## Remarks
 
 Oracle Cloud also has a managed Kubernetes service called
@@ -139,6 +122,105 @@ of the free tier.
 It's a *porte-manteau* between Ampere, Kubernetes, and Oracle.
 It's probably not the best name in the world but it's the one
 we have! If you have an idea for a better name let us know. 😊
+
+## Possible errors and how to address them
+
+### Authentication problem
+
+If you configured OCI authentication using a session token
+(with `oci session authenticate`), please note that this token
+is valid 1 hour by default. If you authenticate, then wait more
+than 1 hour, then try to `terraform apply`, you will get
+authentication errors.
+
+#### Symptom
+
+The following message:
+
+```
+ Error: 401-NotAuthenticated
+│ Service: Identity Compartment
+│ Error Message: The required information to complete authentication was not provided or was incorrect.
+│ OPC request ID: [...]
+│ Suggestion: Please retry or contact support for help with service: Identity Compartment
+```
+
+#### Solution
+
+Authenticate or re-authenticate, for instance with
+`oci session authenticate`.
+
+### Capacity issue
+
+#### Symptom
+
+If you get a message like the following one:
+```
+Error: 500-InternalError
+│ ...
+│ Service: Core Instance
+│ Error Message: Out of host capacity.
+```
+
+It means that there isn't enough servers available at the moment
+on OCI to create the cluster.
+
+#### Solution
+
+One solution is to switch to a different *availability domain*.
+This can be done by changing the `availability_domain` input variable. (Thanks @uknbr for the contribution!)
+
+Note 1: some regions have only one availability domain. In that
+case you cannot change the availability domain.
+
+Note 2: OCI accounts (especially free accounts) are tied to a
+single region, so if you get that problem and cannot change the
+availability domain, you can [create another account][createaccount].
+
+### Using the wrong region
+
+#### Symptom
+
+When doing `terraform apply`, you get this message:
+
+```
+oci_identity_compartment._: Creating...
+╷
+│ Error: 404-NotAuthorizedOrNotFound
+│ Service: Identity Compartment
+│ Error Message: Authorization failed or requested resource not found
+│ OPC request ID: [...]
+│ Suggestion: Either the resource has been deleted or service Identity Compartment need policy to access this resource. Policy reference: https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/policyreference.htm
+│
+│
+│   with oci_identity_compartment._,
+│   on main.tf line 1, in resource "oci_identity_compartment" "_":
+│    1: resource "oci_identity_compartment" "_" {
+│
+╵
+```
+
+#### Solution
+
+Edit `~/.oci/config` and change the `region=` line to put the correct region.
+
+To know what's the correct region, you can try to log in to
+https://cloud.oracle.com/ with your account; after logging in,
+you should be redirected to an URL that looks like
+https://cloud.oracle.com/?region=us-ashburn-1 and in that
+example the region is `us-ashburn-1`.
+
+### Troubleshooting cluster creation
+
+After the VMs are created, you can log into the VMs with the
+`ubuntu` user and the SSH key contained in the `id_rsa` file
+that was created by Terraform.
+
+Then you can check the cloud init output file, e.g. like this:
+```
+tail -n 100 -f /var/log/cloud-init-output.log
+```
+
 
 [createaccount]: https://bit.ly/free-oci-dat-k8s-on-arm
 [freetier]: https://www.oracle.com/cloud/free/
