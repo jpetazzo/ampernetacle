@@ -6,8 +6,8 @@ locals {
     "curl",
     "docker.io",
     "jq",
-    ["kubeadm", "1.20.15-00"],
-    ["kubelet", "1.20.15-00"],
+    ["kubeadm", "1.21.10-00"],
+    ["kubelet", "1.21.10-00"],
     "lsb-release",
     "make",
     "prometheus-node-exporter",
@@ -121,6 +121,7 @@ data "cloudinit_config" "_" {
         #!/bin/sh
         PUBLIC_IP_ADDRESS=$(curl https://icanhazip.com/)
         INSTANCE_ID=$(curl -s http://169.254.169.254/opc/v1/instance | jq '.id' -r)
+        CCM_VERSION=v0.13.0
         sed -i s/@@PUBLIC_IP_ADDRESS@@/$PUBLIC_IP_ADDRESS/ /etc/kubeadm_config.yaml
         sed -i s/@@PROVIDER_ID@@/$INSTANCE_ID/ /etc/kubeadm_config.yaml
         kubeadm init --config=/etc/kubeadm_config.yaml --ignore-preflight-errors=NumCPU
@@ -128,8 +129,8 @@ data "cloudinit_config" "_" {
         kubever=$(kubectl version | base64 | tr -d '\n')
         kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$kubever
         kubectl create secret generic oci-cloud-controller-manager -n kube-system --from-file=cloud-provider.yaml=/home/k8s/cloud-provider.yaml
-        kubectl apply -f https://github.com/oracle/oci-cloud-controller-manager/releases/download/0.12.0/oci-cloud-controller-manager-rbac.yaml
-        kubectl apply -f https://github.com/oracle/oci-cloud-controller-manager/releases/download/0.12.0/oci-cloud-controller-manager.yaml
+        kubectl apply -f https://github.com/oracle/oci-cloud-controller-manager/releases/download/$CCM_VERSION/oci-cloud-controller-manager-rbac.yaml
+        kubectl apply -f https://github.com/oracle/oci-cloud-controller-manager/releases/download/$CCM_VERSION/oci-cloud-controller-manager.yaml
         mkdir -p /home/k8s/.kube
         cp $KUBECONFIG /home/k8s/.kube/config
         chown -R k8s:k8s /home/k8s/.kube
