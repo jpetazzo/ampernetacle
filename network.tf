@@ -60,7 +60,7 @@ resource "oci_core_default_security_list" "_" {
     source      = "10.0.0.0/16"
     source_type = "CIDR_BLOCK"
     # Get protocol numbers from https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml TCP is 6
-    protocol = "6"
+    protocol    = "all"
   }
 }
 
