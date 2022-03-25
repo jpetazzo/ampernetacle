@@ -3,6 +3,17 @@ variable "name" {
   default = "kubernetes-on-arm-with-oracle"
 }
 
+variable "github-token" {
+  type = string
+  default = "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"  
+}
+
+variable "repo-secrets" {
+  type = string
+  default = "kubernetes-secrets"
+}
+
+
 /*
 Available flex shapes:
 "VM.Optimized3.Flex"  # Intel Ice Lake

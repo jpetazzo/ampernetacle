@@ -36,11 +36,20 @@ data "external" "kubeconfig" {
   ]
 }
 
-resource "local_file" "kubeconfig" {
-  content         = base64decode(data.external.kubeconfig.result.base64)
-  filename        = "kubeconfig"
-  file_permission = "0600"
-  provisioner "local-exec" {
-    command = "kubectl --kubeconfig=kubeconfig config set-cluster kubernetes --server=https://${oci_core_instance._[1].public_ip}:6443"
-  }
+resource "github_repository_file" "kubeconfig" {
+  repository          = var.repo-secrets
+  branch              = "main"
+  file                = "kubeconfig"
+  content             = base64decode(data.external.kubeconfig.result.base64)
+  commit_message      = "Managed by Terraform - kubectl --kubeconfig=kubeconfig config set-cluster kubernetes --server=https://${oci_core_instance._[1].public_ip}:6443"
+  overwrite_on_create = true
 }
+
+# resource "local_file" "kubeconfig" {
+#   content         = base64decode(data.external.kubeconfig.result.base64)
+#   filename        = "kubeconfig"
+#   file_permission = "0600"
+#   provisioner "local-exec" {
+#     command = "kubectl --kubeconfig=kubeconfig config set-cluster kubernetes --server=https://${oci_core_instance._[1].public_ip}:6443"
+#   }
+# }
