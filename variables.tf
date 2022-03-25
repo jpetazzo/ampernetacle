@@ -2,15 +2,14 @@ variable "name" {
   type    = string
   default = "kubernetes-on-arm-with-oracle"
 }
-
-variable "github-token" {
-  type = string
-  default = "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"  
-}
-
 variable "repo-secrets" {
   type = string
   default = "kubernetes-secrets"
+}
+
+variable "github_token" {
+  description = "GitHub access token used to configure the provider"
+  type        = string
 }
 
 
