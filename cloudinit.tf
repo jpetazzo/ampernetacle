@@ -94,6 +94,7 @@ data "cloudinit_config" "_" {
       #!/bin/sh
       sed -i "s/-A INPUT -j REJECT --reject-with icmp-host-prohibited//" /etc/iptables/rules.v4 
       netfilter-persistent start
+      netfilter-persistent flush
     EOF
   }
 
