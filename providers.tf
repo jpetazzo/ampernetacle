@@ -1,8 +1,15 @@
 terraform {
   required_providers {
     oci = {
-      source  = "hashicorp/oci"
+      source  = "oracle/oci"
       version = "~> 4"
     }
   }
+}
+
+
+provider "oci" {
+	auth = "SecurityToken"
+	config_file_profile = "default"
+	region = "eu-amsterdam-1"
 }
