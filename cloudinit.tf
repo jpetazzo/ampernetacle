@@ -1,6 +1,5 @@
 locals {
   packages = [
-    "apt-transport-https",
     "build-essential",
     "ca-certificates",
     "curl",
