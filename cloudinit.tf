@@ -70,6 +70,71 @@ data "cloudinit_config" "_" {
           apiServer:
             certSANs:
             - @@PUBLIC_IP_ADDRESS@@
+      - path: /etc/nginx-metallb-config.yaml
+        owner: "root:root"
+        permissions: "0600"
+        content: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            namespace: metallb-system
+            name: config
+          data:
+            config: |
+              address-pools:
+              - name: default
+                protocol: layer2
+                addresses:
+                - 10.0.0.11/32
+          ---
+          apiVersion: cert-manager.io/v1
+          kind: ClusterIssuer
+          metadata:
+            name: letsencrypt-prod
+            namespace: cert-manager
+          spec:
+            acme:
+              email: my-email@gmail.com
+              server: https://acme-v02.api.letsencrypt.org/directory
+              privateKeySecretRef:
+                name: letsencrypt-prod
+              solvers:
+              - http01:
+                  ingress:
+                    class: nginx
+          ---
+          apiVersion: v1 #this entire section i dont know if i've made it in the best way.
+          kind: Service
+          metadata:
+            labels:
+              app.kubernetes.io/component: controller
+              app.kubernetes.io/instance: ingress-nginx
+              app.kubernetes.io/managed-by: Helm
+              app.kubernetes.io/name: ingress-nginx
+            name: ingress-nginx-controller
+            namespace: ingress-nginx
+          spec:
+            externalTrafficPolicy: Cluster #for now i dont know how to make it work with local.
+            ipFamilies:
+            - IPv4
+            ipFamilyPolicy: SingleStack
+            ports:
+            - name: http
+              port: 80
+              protocol: TCP
+              targetPort: http
+            - name: https
+              port: 443
+              protocol: TCP
+              targetPort: https
+            selector:
+              app.kubernetes.io/component: controller
+              app.kubernetes.io/instance: ingress-nginx
+              app.kubernetes.io/name: ingress-nginx
+            sessionAffinity: None
+            type: LoadBalancer #it is important to apply this config for ingress-nginx just to change this flag
+            externalIPs:
+            - @@PUBLIC_IP_ADDRESS@@
       - path: /home/k8s/.ssh/id_rsa
         defer: true
         owner: "k8s:k8s"
@@ -116,6 +181,22 @@ data "cloudinit_config" "_" {
         export KUBECONFIG=/etc/kubernetes/admin.conf
         kubever=$(kubectl version | base64 | tr -d '\n')
         kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$kubever
+
+        # Preparation for metallb: https://metallb.universe.tf/installation/
+        kubectl get configmap kube-proxy -n kube-system -o yaml | \
+        sed -e "s/strictARP: false/strictARP: true/" | \
+        kubectl apply -f - -n kube-system
+
+        # apply cert-manager, ingress-nginx, metal lb and longhorn to the cluster:
+        kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
+        kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.1/deploy/static/provider/baremetal/deploy.yaml
+        kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.2.3/deploy/longhorn.yaml
+
+        sed -i s/@@PUBLIC_IP_ADDRESS@@/$PUBLIC_IP_ADDRESS/ /etc/nginx-metallb-config.yaml
+        kubectl apply -f /etc/nginx-metallb-config.yaml
+
         mkdir -p /home/k8s/.kube
         cp $KUBECONFIG /home/k8s/.kube/config
         chown -R k8s:k8s /home/k8s/.kube

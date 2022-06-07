@@ -96,6 +96,76 @@ These might be added in a later iteration of this project.
 Meanwhile, if you want to install it manually, you can check
 the [OCI cloud controller manager github repository][ccm].
 
+Edit:
+
+You can use persistent storage with longhorn, here is an example database:
+
+```
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mariadb:10.2
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: "8*&#i7fj2j47d"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+
+```
+
+Longhorn will maintain replica volumes in HA on 3 worker nodes and has a UI interface to view volume status.
+
+Edit2:
+Added Ingress Controller NGINX on master node public ip.
+
 ## Remarks
 
 Oracle Cloud also has a managed Kubernetes service called
