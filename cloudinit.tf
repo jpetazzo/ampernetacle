@@ -34,7 +34,7 @@ data "cloudinit_config" "_" {
       apt:
         sources:
           kubernetes.list:
-            source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+            source: "deb https://packages.cloud.google.com/apt/ kubernetes-xenial main"
             key: |
               ${indent(8, data.http.apt_repo_key.body)}
       users:
