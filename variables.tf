@@ -3,6 +3,16 @@ variable "name" {
   default = "kubernetes-on-arm-with-oracle"
 }
 
+variable "dynamic_group_name" {
+  type = string
+  default = "k8s-dynamic-group-cloud-controller"
+}
+
+variable "policy_name" {
+  type = string
+  default = "k8s-policy-cloud-controller"
+}
+
 /*
 Available flex shapes:
 "VM.Optimized3.Flex"  # Intel Ice Lake
