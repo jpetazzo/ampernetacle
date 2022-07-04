@@ -22,6 +22,11 @@ variable "how_many_nodes" {
   default = 4
 }
 
+variable "tailscale_authkey" {
+  type = string
+  description = "Tailscale authkey used to join the node"
+}
+
 variable "availability_domain" {
   type    = number
   default = 0

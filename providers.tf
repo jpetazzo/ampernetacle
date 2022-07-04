@@ -6,3 +6,10 @@ terraform {
     }
   }
 }
+
+
+provider "oci" {
+  auth                = "SecurityToken"
+  config_file_profile = "default"
+  region              = "eu-amsterdam-1"
+}

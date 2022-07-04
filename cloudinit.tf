@@ -5,6 +5,7 @@ locals {
     "ca-certificates",
     "curl",
     "docker.io",
+    "htop",
     "jq",
     "kubeadm",
     "kubelet",
@@ -13,6 +14,7 @@ locals {
     "prometheus-node-exporter",
     "python3-pip",
     "software-properties-common",
+    "tailscale",
     "tmux",
     "tree",
     "unzip",
@@ -37,6 +39,10 @@ data "cloudinit_config" "_" {
             source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
             key: |
               ${indent(8, data.http.apt_repo_key.body)}
+          tailscale.list:
+            source: "deb https://pkgs.tailscale.com/stable/ubuntu focal main"
+            key: |
+              ${indent(8, data.http.tailscale_apt_repo_key.body)}
       users:
       - default
       - name: k8s
@@ -103,6 +109,15 @@ data "cloudinit_config" "_" {
     EOF
   }
 
+  part {
+    filename     = "tailscale-connect.sh"
+    content_type = "text/x-shellscript"
+    content      = <<-EOF
+      #!/bin/sh
+      sudo tailscale up --authkey ${var.tailscale_authkey} --accept-routes
+    EOF
+  }
+
   dynamic "part" {
     for_each = each.value.role == "controlplane" ? ["yes"] : []
     content {
@@ -146,6 +161,10 @@ data "cloudinit_config" "_" {
 
 data "http" "apt_repo_key" {
   url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg.asc"
+}
+
+data "http" "tailscale_apt_repo_key" {
+  url = "https://pkgs.tailscale.com/stable/ubuntu/focal.gpg"
 }
 
 # The kubeadm token must follow a specific format:

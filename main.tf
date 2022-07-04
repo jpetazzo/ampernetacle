@@ -17,8 +17,6 @@ data "oci_core_images" "_" {
   shape                    = var.shape
   operating_system         = "Canonical Ubuntu"
   operating_system_version = "20.04"
-  #operating_system         = "Oracle Linux"
-  #operating_system_version = "7.9"
 }
 
 resource "oci_core_instance" "_" {
@@ -50,7 +48,7 @@ locals {
     for i in range(1, 1 + var.how_many_nodes) :
     i => {
       node_name  = format("node%d", i)
-      ip_address = format("10.0.0.%d", 10 + i)
+      ip_address = format("10.101.0.%d", 10 + i)
       role       = i == 1 ? "controlplane" : "worker"
     }
   }
