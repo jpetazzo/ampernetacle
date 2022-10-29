@@ -22,6 +22,11 @@ variable "how_many_nodes" {
   default = 4
 }
 
+variable "availability_domain" {
+  type    = number
+  default = 0
+}
+
 variable "ocpus_per_node" {
   type    = number
   default = 1

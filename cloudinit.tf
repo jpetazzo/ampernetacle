@@ -93,6 +93,12 @@ data "cloudinit_config" "_" {
     content      = <<-EOF
       #!/bin/sh
       sed -i "s/-A INPUT -j REJECT --reject-with icmp-host-prohibited//" /etc/iptables/rules.v4 
+      # There appears to be a bug in the netfilter-persistent scripts:
+      # the "reload" and "restart" actions seem to append the rules files
+      # to the existing rules (instead of replacing them), perhaps because
+      # the "stop" action is disabled. So instead, we need to flush the
+      # rules first before we load the new rule set.
+      netfilter-persistent flush
       netfilter-persistent start
     EOF
   }
@@ -124,7 +130,15 @@ data "cloudinit_config" "_" {
       content_type = "text/x-shellscript"
       content      = <<-EOF
       #!/bin/sh
-      kubeadm join --discovery-token-unsafe-skip-ca-verification --token ${local.kubeadm_token} ${local.nodes[1].ip_address}:6443
+      KUBE_API_SERVER=${local.nodes[1].ip_address}:6443
+      while ! curl --insecure https://$KUBE_API_SERVER; do
+        echo "Kubernetes API server ($KUBE_API_SERVER) not responding."
+        echo "Waiting 10 seconds before we try again."
+        sleep 10
+      done
+      echo "Kubernetes API server ($KUBE_API_SERVER) appears to be up."
+      echo "Trying to join this node to the cluster."
+      kubeadm join --discovery-token-unsafe-skip-ca-verification --token ${local.kubeadm_token} $KUBE_API_SERVER
     EOF
     }
   }

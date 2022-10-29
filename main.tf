@@ -24,7 +24,7 @@ data "oci_core_images" "_" {
 resource "oci_core_instance" "_" {
   for_each            = local.nodes
   display_name        = each.value.node_name
-  availability_domain = data.oci_identity_availability_domains._.availability_domains[0].name
+  availability_domain = data.oci_identity_availability_domains._.availability_domains[var.availability_domain].name
   compartment_id      = local.compartment_id
   shape               = var.shape
   shape_config {
