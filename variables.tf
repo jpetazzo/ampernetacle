@@ -36,3 +36,8 @@ variable "memory_in_gbs_per_node" {
   type    = number
   default = 6
 }
+
+variable "weave_version" {
+  type = string
+  default = "v2.8.1"
+}
