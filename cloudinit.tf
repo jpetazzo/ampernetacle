@@ -114,8 +114,7 @@ data "cloudinit_config" "_" {
         sed -i s/@@PUBLIC_IP_ADDRESS@@/$PUBLIC_IP_ADDRESS/ /etc/kubeadm_config.yaml
         kubeadm init --config=/etc/kubeadm_config.yaml --ignore-preflight-errors=NumCPU
         export KUBECONFIG=/etc/kubernetes/admin.conf
-        kubever=$(kubectl version | base64 | tr -d '\n')
-        kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$kubever
+        kubectl apply -f https://github.com/weaveworks/weave/releases/download/${var.weave_version}/weave-daemonset-k8s.yaml
         mkdir -p /home/k8s/.kube
         cp $KUBECONFIG /home/k8s/.kube/config
         chown -R k8s:k8s /home/k8s/.kube
