@@ -4,6 +4,7 @@ locals {
 locals {
   bash       = "while ! curl -k https://${oci_core_instance._[1].public_ip}:6443; do sleep 1; done"
   powershell = "powershell .\\winInsecureCurl.ps1 ${oci_core_instance._[1].public_ip}"
+  get_kubeconfig = "while ! sudo grep -q user /etc/kubernetes/admin.conf ; do sleep 1; done; sudo base64 -w0 /etc/kubernetes/admin.conf"
 }
 
 resource "null_resource" "wait_for_kube_apiserver" {
@@ -18,7 +19,7 @@ data "external" "kubeconfig" {
   program = local.is_windows ? [
     "powershell",
     <<EOT
-    write-host "{`"base64`": `"$(ssh -o StrictHostKeyChecking=no -l k8s -i ${local_file.ssh_private_key.filename} ${oci_core_instance._[1].public_ip} sudo base64 -w0 /etc/kubernetes/admin.conf)`"}"
+    write-host "{`"base64`": `"$(ssh -o StrictHostKeyChecking=no -l k8s -i ${local_file.ssh_private_key.filename} ${oci_core_instance._[1].public_ip} "${local.get_kubeconfig}")`"}"
     EOT
     ] : [
     "sh",
@@ -30,7 +31,7 @@ data "external" "kubeconfig" {
         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
               -l k8s -i ${local_file.ssh_private_key.filename} \
               ${oci_core_instance._[1].public_ip} \
-              sudo cat /etc/kubernetes/admin.conf | base64 -w0
+              "${local.get_kubeconfig}"
             )'"}'
     EOT
   ]
