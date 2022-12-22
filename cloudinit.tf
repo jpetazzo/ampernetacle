@@ -37,11 +37,11 @@ data "cloudinit_config" "_" {
           kubernetes.list:
             source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
             key: |
-              ${indent(8, data.http.kubernetes_repo_key.body)}
+              ${indent(8, data.http.kubernetes_repo_key.response_body)}
           docker.list:
             source: "deb https://download.docker.com/linux/ubuntu jammy stable"
             key: |
-              ${indent(8, data.http.docker_repo_key.body)}
+              ${indent(8, data.http.docker_repo_key.response_body)}
       users:
       - default
       - name: k8s
@@ -175,7 +175,7 @@ data "http" "docker_repo_key" {
 
 resource "random_string" "token1" {
   length  = 6
-  number  = true
+  numeric = true
   lower   = true
   special = false
   upper   = false
@@ -183,7 +183,7 @@ resource "random_string" "token1" {
 
 resource "random_string" "token2" {
   length  = 16
-  number  = true
+  numeric = true
   lower   = true
   special = false
   upper   = false

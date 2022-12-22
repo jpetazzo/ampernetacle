@@ -44,8 +44,8 @@ resource "oci_core_instance" "_" {
     user_data           = data.cloudinit_config._[each.key].rendered
   }
   connection {
-    host = self.public_ip
-    user = "ubuntu"
+    host        = self.public_ip
+    user        = "ubuntu"
     private_key = tls_private_key.ssh.private_key_pem
   }
   provisioner "remote-exec" {

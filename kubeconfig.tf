@@ -3,7 +3,7 @@ locals {
 }
 
 data "external" "kubeconfig" {
-  depends_on = [ oci_core_instance._[1] ]
+  depends_on = [oci_core_instance._[1]]
   program = local.is_windows ? [
     "powershell",
     <<EOT
