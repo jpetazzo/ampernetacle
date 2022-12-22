@@ -21,6 +21,7 @@ if you want to develop or test applications on ARM.
 3. Have installed or [install terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/oci-get-started).
 4. Have installed or [install OCI CLI ](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
 5. Configure [OCI credentials](https://learn.hashicorp.com/tutorials/terraform/oci-build?in=terraform/oci-get-started).
+   If you obtain a session token (with `oci session authenticate`), make sure to put the correct region, and when prompted for the profile name, enter `DEFAULT` so that Terraform finds the session token automatically.
 6. Download this project and enter its folder.
 7. `terraform init`
 8. `terraform apply`
@@ -135,6 +136,13 @@ The following message:
 
 Authenticate or re-authenticate, for instance with
 `oci session authenticate`.
+
+If prompted for the profile name, make sure to enter `DEFAULT`
+so that Terraform automatically uses the session token.
+
+If you previously used `oci session authenticate`, you
+should be able to refresh the session with
+`oci session refresh --profile DEFAULT`.
 
 ### Capacity issue
 
