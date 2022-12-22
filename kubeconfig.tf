@@ -1,20 +1,9 @@
 locals {
   is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
 }
-locals {
-  bash       = "while ! curl -k https://${oci_core_instance._[1].public_ip}:6443; do sleep 1; done"
-  powershell = "powershell .\\winInsecureCurl.ps1 ${oci_core_instance._[1].public_ip}"
-}
-
-resource "null_resource" "wait_for_kube_apiserver" {
-  depends_on = [oci_core_instance._[1]]
-  provisioner "local-exec" {
-    command = local.is_windows ? local.powershell : local.bash
-  }
-}
 
 data "external" "kubeconfig" {
-  depends_on = [null_resource.wait_for_kube_apiserver]
+  depends_on = [ oci_core_instance._[1] ]
   program = local.is_windows ? [
     "powershell",
     <<EOT
