@@ -3,8 +3,9 @@ locals {
     "apt-transport-https",
     "build-essential",
     "ca-certificates",
+    "containerd.io",
     "curl",
-    "docker.io",
+    "docker-ce",
     "jq",
     "kubeadm",
     "kubelet",
@@ -36,7 +37,11 @@ data "cloudinit_config" "_" {
           kubernetes.list:
             source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
             key: |
-              ${indent(8, data.http.apt_repo_key.body)}
+              ${indent(8, data.http.kubernetes_repo_key.body)}
+          docker.list:
+            source: "deb https://download.docker.com/linux/ubuntu jammy stable"
+            key: |
+              ${indent(8, data.http.docker_repo_key.body)}
       users:
       - default
       - name: k8s
@@ -57,7 +62,7 @@ data "cloudinit_config" "_" {
         permissions: "0600"
         content: |
           kind: InitConfiguration
-          apiVersion: kubeadm.k8s.io/v1beta2
+          apiVersion: kubeadm.k8s.io/v1beta3
           bootstrapTokens:
           - token: ${local.kubeadm_token}
           ---
@@ -66,7 +71,7 @@ data "cloudinit_config" "_" {
           cgroupDriver: cgroupfs
           ---
           kind: ClusterConfiguration
-          apiVersion: kubeadm.k8s.io/v1beta2
+          apiVersion: kubeadm.k8s.io/v1beta3
           apiServer:
             certSANs:
             - @@PUBLIC_IP_ADDRESS@@
@@ -88,7 +93,7 @@ data "cloudinit_config" "_" {
   # By default, all inbound traffic is blocked
   # (except SSH) so we need to change that.
   part {
-    filename     = "allow-inbound-traffic.sh"
+    filename     = "1-allow-inbound-traffic.sh"
     content_type = "text/x-shellscript"
     content      = <<-EOF
       #!/bin/sh
@@ -103,10 +108,22 @@ data "cloudinit_config" "_" {
     EOF
   }
 
+  # Docker's default containerd configuration disables CRI.
+  # Let's re-enable it.
+  part {
+    filename     = "2-re-enable-cri.sh"
+    content_type = "text/x-shellscript"
+    content      = <<-EOF
+      #!/bin/sh
+      echo "# Use containerd's default configuration instead of the one shipping with Docker." > /etc/containerd/config.toml
+      systemctl restart containerd
+    EOF
+  }
+
   dynamic "part" {
     for_each = each.value.role == "controlplane" ? ["yes"] : []
     content {
-      filename     = "kubeadm-init.sh"
+      filename     = "3-kubeadm-init.sh"
       content_type = "text/x-shellscript"
       content      = <<-EOF
         #!/bin/sh
@@ -125,7 +142,7 @@ data "cloudinit_config" "_" {
   dynamic "part" {
     for_each = each.value.role == "worker" ? ["yes"] : []
     content {
-      filename     = "kubeadm-join.sh"
+      filename     = "3-kubeadm-join.sh"
       content_type = "text/x-shellscript"
       content      = <<-EOF
       #!/bin/sh
@@ -143,8 +160,12 @@ data "cloudinit_config" "_" {
   }
 }
 
-data "http" "apt_repo_key" {
+data "http" "kubernetes_repo_key" {
   url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg.asc"
+}
+
+data "http" "docker_repo_key" {
+  url = "https://download.docker.com/linux/debian/gpg"
 }
 
 # The kubeadm token must follow a specific format:
