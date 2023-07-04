@@ -161,7 +161,7 @@ data "cloudinit_config" "_" {
 }
 
 data "http" "kubernetes_repo_key" {
-  url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg.asc"
+  url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
 }
 
 data "http" "docker_repo_key" {
