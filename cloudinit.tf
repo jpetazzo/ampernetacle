@@ -98,6 +98,7 @@ data "cloudinit_config" "_" {
     content      = <<-EOF
       #!/bin/sh
       sed -i "s/-A INPUT -j REJECT --reject-with icmp-host-prohibited//" /etc/iptables/rules.v4 
+      sed -i "s/-A FORWARD -j REJECT --reject-with icmp-host-prohibited//" /etc/iptables/rules.v4
       # There appears to be a bug in the netfilter-persistent scripts:
       # the "reload" and "restart" actions seem to append the rules files
       # to the existing rules (instead of replacing them), perhaps because
