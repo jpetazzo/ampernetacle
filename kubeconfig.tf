@@ -19,7 +19,7 @@ data "external" "kubeconfig" {
         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
               -l k8s -i ${local_file.ssh_private_key.filename} \
               ${oci_core_instance._[1].public_ip} \
-              sudo cat /etc/kubernetes/admin.conf | base64 -w0
+              'sudo cat /etc/kubernetes/admin.conf | base64 -w0'
             )'"}'
     EOT
   ]
