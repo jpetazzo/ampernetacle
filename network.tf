@@ -21,7 +21,7 @@ resource "oci_core_default_security_list" "_" {
   manage_default_resource_id = oci_core_vcn._.default_security_list_id
   ingress_security_rules {
     protocol = "all"
-    source   = "0.0.0.0/0"
+    source   = "94.159.134.14/32"
   }
   egress_security_rules {
     protocol    = "all"
