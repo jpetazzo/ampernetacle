@@ -45,6 +45,6 @@ variable "private_key" {}
 variable "region" {}
 
 # For Object Storage Bucket
-variable "compartment_id" {}
-variable "bucket_name" {}
-variable "bucket_namespace" {}
+# variable "compartment_id" {}
+# variable "bucket_name" {}
+# variable "bucket_namespace" {}
