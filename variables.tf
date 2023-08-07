@@ -1,6 +1,6 @@
 variable "name" {
   type    = string
-  default = "kubernetes-on-arm-with-oracle"
+  default = "k8s"
 }
 
 /*
@@ -36,3 +36,15 @@ variable "memory_in_gbs_per_node" {
   type    = number
   default = 6
 }
+
+# Default OCI provider
+variable "tenancy_ocid" {}
+variable "user_ocid" {}
+variable "fingerprint" {}
+variable "private_key" {}
+variable "region" {}
+
+# For Object Storage Bucket
+variable "compartment_id" {}
+variable "bucket_name" {}
+variable "bucket_namespace" {}
