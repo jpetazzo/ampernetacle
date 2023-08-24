@@ -1,0 +1,89 @@
+auth:
+  region: il-jerusalem-1
+  tenancy: ocid1.tenancy.oc1..aaaaaaaac5g7wh5u5kcvzjeaxqsaop4pbuf3whetaxjrkco6b67aweuidbnq
+  user: ocid1.user.oc1..aaaaaaaaj6axcip6apggyhaemokp6vrrvrnkpm63hg7o7fo45bmambppvgva
+  key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEogIBAAKCAQEAzlHzKHyKxkcg7r5JTyKaKbIxmoFtZfmhbnHAsB50/N9UN0BR
+    zkRhNH1GYG+IF9m6W6eqNKzGtGBDz+xnd/Ultag5F1cgCqPKnyA+E2NWZXyT7ekM
+    YHlNPGxbdxST92ttMoDFNpit0G19jGHw658RUEAOGhmvwmycuw36bep2uXGzGyB9
+    NP0nTC5XtiCdG+y4KWkyoVM3+Gz7Zjr7ACqLU9n1wd19kJLHIR6epQd+wNrDS9bh
+    KWLQPGWdIktyWe1izPAVkCGal6suBMSWM/nNvxDpxaM/JLNZ5R7TTT+RJl1KWpya
+    BivQJEyDHpU3bFT0BXpKoPcejV2BKrzBkl3hIQIDAQABAoIBADsEsDTlo2DimeYR
+    YrETadwBkDTtTxj7lpUcTw1SOQ7Y56NCb+Q8JT45k7ckUF7aNnffd03IGrMgUmWY
+    72QeKSJUs7gcgRrqDZ0FQRyUrvMq9rn4j0TNji15pZRju4vsG/l1YnSiqh3UJDTT
+    E3KjNvWozR/kNyW7of3UGs30Yu/atezVdpPfqCtONsErpaZtqeM5MyviJlGyo0KA
+    IZmJSnicMJNOSOPf0YTi5nxjvaoZYHMja897BDLHPzfpxapg4EPxEBoc/SnrEBM1
+    23svvKZbGPoh3IxPhTe+zOoOsNx5n87ezMsre/dZn/Lef8nJsTnB8h6JyI+ArphE
+    zFylJRECgYEA6TOoN28JjSHE1bMtTIDzsVDCfrwWEaip7Un6Hb4rl5b5IopeY4+b
+    1JVz/1/KcrZIzlxJYUsKByw4QyjrivEohWkqs7wc2j+t+uV59tyfIOTDhwFqCSYP
+    jMApAavfVk5vAgrusoswFoHLmpAgtJ/VzTjZK+NFEPrToJ9YA2pvAjUCgYEA4n2G
+    ZoA8qJ0c/sNZ6UXlBGBNzMZRgdw5Io0AbCrWb6K7h4D6jvYLUOxCiOKWgOvKQECn
+    lQyyLcaDYZr5YlINb2IkO5cgmtVQ+fTdXmwbjEh2/VgE9KMUI1kYxJreG4dzwuPc
+    VmsSIcmlVlcP7dcrMn731ZTvZGroLkk6KAHsQL0CgYBagJu197fDN+nF7aWU3S62
+    D9uLh78g104rMtyIkncke4jwaLa8+MzHMcE0yJ4u6qNSwuoPginAIt8q4USYRYMu
+    U2QpIMYpxTDmAAzXS0POZjmjuV7HcifyvdisN2GTgxj9t/RvAimFcpXrxCeNMcKt
+    xHQz3h29uzpKSczEdpfiSQKBgHDsCq1iNFwQ8VrnxRU0Hunepgt5uTuYs/fQ+yvy
+    87T3Gq6FlObgL2YqVUXwSv9+D/mXAraifNeryOdKIBpwNHibItt/DueDgXsOJayl
+    E9sOah0H3HioMispidrEKAbrssCxYLLJcWHdKozwnWWEyOnFOgWH2w9i6d3h7pfx
+    1Xu1AoGAXdz74tcWICE4eY1GwbGr6JY5MwgTXfjUgcvfKZZibZJZsysEcoFM4awz
+    wL2/VS+ODmuq7AVOIP2KmLqFtDgWFXfY+8xQ1RJDNfgFxp3+sc835ANhjpThduQq
+    YZOJmixciFwTZEtZG94ZcmuFn1+xFpLW0eNpT0AOkfhkQGXqa7Q=
+    -----END RSA PRIVATE KEY-----
+  # Omit if there is not a password for the key
+  #passphrase: supersecretpassword
+  fingerprint: 8d:3d:f4:e3:26:77:37:dc:e1:6c:08:32:c5:eb:bd:02
+
+  # Omit all of the above options then set useInstancePrincipals to true if you
+  # want to use Instance Principals API access
+  # (https://docs.us-phoenix-1.oraclecloud.com/Content/Identity/Tasks/callingservicesfrominstances.htm).
+  # Ensure you have setup the following OCI policies and your kubernetes nodes are running within them
+  # allow dynamic-group [your dynamic group name] to read instance-family in compartment [your compartment name]
+  # allow dynamic-group [your dynamic group name] to use virtual-network-family in compartment [your compartment name]
+  # allow dynamic-group [your dynamic group name] to manage load-balancers in compartment [your compartment name]
+  useInstancePrincipals: false
+
+# compartment configures Compartment within which the cluster resides.
+compartment: ocid1.compartment.oc1..aaaaaaaafx2ii2k3lipsj6hk3kifvn4xbaqacjzamexvcvutgkfxplsanouq
+
+# vcn configures the Virtual Cloud Network (VCN) within which the cluster resides.
+vcn: ocid1.vcn.oc1.il-jerusalem-1.amaaaaaal77zigia62hsj6rjnza4hjcqmiizruuyskugucle5b5vz3vv3jxa
+
+loadBalancer:
+  # subnet1 configures one of two subnets to which load balancers will be added.
+  # OCI load balancers require two subnets to ensure high availability.
+  subnet1: ocid1.subnet.oc1.il-jerusalem-1.aaaaaaaax63rvrrq6mxuxgyy2pvcvqvlva6g657t6mwpziiggiviu4djorjq
+
+  # subnet2 configures the second of two subnets to which load balancers will be
+  # added. OCI load balancers require two subnets to ensure high availability.
+  #subnet2: ocid1.subnet.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+  # SecurityListManagementMode configures how security lists are managed by the CCM.
+  # If you choose to have security lists managed by the CCM, ensure you have setup the following additional OCI policy:
+  # Allow dynamic-group [your dynamic group name] to manage security-lists in compartment [your compartment name]
+  #
+  #   "All" (default): Manage all required security list rules for load balancer services.
+  #   "Frontend":      Manage only security list rules for ingress to the load
+  #                    balancer. Requires that the user has setup a rule that
+  #                    allows inbound traffic to the appropriate ports for kube
+  #                    proxy health port, node port ranges, and health check port ranges.
+  #                    E.g. 10.82.0.0/16 30000-32000.
+  #   "None":          Disables all security list management. Requires that the
+  #                    user has setup a rule that allows inbound traffic to the
+  #                    appropriate ports for kube proxy health port, node port
+  #                    ranges, and health check port ranges. E.g. 10.82.0.0/16 30000-32000.
+  #                    Additionally requires the user to mange rules to allow
+  #                    inbound traffic to load balancers.
+  securityListManagementMode: All
+
+  # Optional specification of which security lists to modify per subnet. This does not apply if security list management is off.
+  securityLists:
+#    ocid1.subnet.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: ocid1.securitylist.oc1.iad.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#    ocid1.subnet.oc1.phx.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb: ocid1.securitylist.oc1.iad.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+# Optional rate limit controls for accessing OCI API
+rateLimiter:
+  rateLimitQPSRead: 20.0
+  rateLimitBucketRead: 5
+  rateLimitQPSWrite: 20.0
+  rateLimitBucketWrite: 5
