@@ -37,12 +37,14 @@ variable "memory_in_gbs_per_node" {
   default = 6
 }
 
-# # Default OCI provider
-# variable "tenancy_ocid" {}
-# variable "user_ocid" {}
-# variable "fingerprint" {}
-# variable "private_key" {}
-# variable "region" {}
+# Default OCI provider
+variable "tenancy_ocid" {
+  default = "ocid1.tenancy.oc1..aaaaaaaaihidlz7gd25acu7dun62sttonwij363s3kkcndyycq63i4br4pra"
+}
+
+variable "region" {
+  default = "il-jerusalem-1"
+}
 
 # For Object Storage Bucket
 # variable "compartment_id" {}
