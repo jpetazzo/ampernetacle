@@ -6,8 +6,10 @@ locals {
     "containerd.io",
     "curl",
     "docker-ce",
+    "gpg",
     "jq",
     "kubeadm",
+    "kubectl",
     "kubelet",
     "lsb-release",
     "make",
@@ -35,7 +37,7 @@ data "cloudinit_config" "_" {
       apt:
         sources:
           kubernetes.list:
-            source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+            source: "deb https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
             key: |
               ${indent(8, data.http.kubernetes_repo_key.response_body)}
           docker.list:
@@ -162,7 +164,7 @@ data "cloudinit_config" "_" {
 }
 
 data "http" "kubernetes_repo_key" {
-  url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+  url = "https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key"
 }
 
 data "http" "docker_repo_key" {
