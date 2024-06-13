@@ -17,6 +17,7 @@ locals {
     "tmux",
     "tree",
     "unzip",
+    "gpg",
   ]
 }
 
@@ -35,7 +36,7 @@ data "cloudinit_config" "_" {
       apt:
         sources:
           kubernetes.list:
-            source: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+            source: "deb https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
             key: |
               ${indent(8, data.http.kubernetes_repo_key.response_body)}
           docker.list:
@@ -132,7 +133,7 @@ data "cloudinit_config" "_" {
         sed -i s/@@PUBLIC_IP_ADDRESS@@/$PUBLIC_IP_ADDRESS/ /etc/kubeadm_config.yaml
         kubeadm init --config=/etc/kubeadm_config.yaml --ignore-preflight-errors=NumCPU
         export KUBECONFIG=/etc/kubernetes/admin.conf
-        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s-1.11.yaml
+        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
         mkdir -p /home/k8s/.kube
         cp $KUBECONFIG /home/k8s/.kube/config
         chown -R k8s:k8s /home/k8s/.kube
@@ -162,7 +163,7 @@ data "cloudinit_config" "_" {
 }
 
 data "http" "kubernetes_repo_key" {
-  url = "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+  url = "https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key"
 }
 
 data "http" "docker_repo_key" {
