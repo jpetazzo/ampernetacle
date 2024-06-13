@@ -6,8 +6,10 @@ locals {
     "containerd.io",
     "curl",
     "docker-ce",
+    "gpg",
     "jq",
     "kubeadm",
+    "kubectl",
     "kubelet",
     "lsb-release",
     "make",
@@ -17,7 +19,6 @@ locals {
     "tmux",
     "tree",
     "unzip",
-    "gpg",
   ]
 }
 
@@ -133,7 +134,7 @@ data "cloudinit_config" "_" {
         sed -i s/@@PUBLIC_IP_ADDRESS@@/$PUBLIC_IP_ADDRESS/ /etc/kubeadm_config.yaml
         kubeadm init --config=/etc/kubeadm_config.yaml --ignore-preflight-errors=NumCPU
         export KUBECONFIG=/etc/kubernetes/admin.conf
-        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s-1.11.yaml
         mkdir -p /home/k8s/.kube
         cp $KUBECONFIG /home/k8s/.kube/config
         chown -R k8s:k8s /home/k8s/.kube
